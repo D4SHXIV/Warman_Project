@@ -68,25 +68,31 @@ void loop() {
     digitalWrite(LED_PIN, HIGH);
 
     // ===== FORWARD =====
+
     forward(speedMotor);
-    delay(1000);
+    delay(750);
 
-    backward(speedMotor);
-    delay(1000);
-
-    rotateRight(speedMotor);
-    delay(1600);
-
-    left(speedMotor);
-    delay(500);
-
-    backward(speedMotor);
-    delay(4100);
-
-    // ===== STOP =====
     stopMotors();
     delay(1000);
-  } 
+
+    backward(speedMotor);
+    delay(750);
+
+    stopMotors();
+    delay(1000);
+    
+    rotate(speedMotor);
+    delay(1085);
+
+    stopMotors();
+    delay(1000);
+
+    forward(speedMotor);
+    delay(3700);
+
+    stopMotors();
+
+  }
 }
 
 // =====================================
@@ -94,9 +100,12 @@ void loop() {
 // =====================================
 void forward(int speedVal) {
 
+  // Left side forward
   digitalWrite(M1_DIR, LOW);
-  digitalWrite(M2_DIR, LOW);
   digitalWrite(M3_DIR, HIGH);
+
+  // Right side backward
+  digitalWrite(M2_DIR, LOW);
   digitalWrite(M4_DIR, HIGH);
 
   analogWrite(M1_PWM, speedVal);
@@ -114,6 +123,18 @@ void backward(int speedVal) {
   digitalWrite(M2_DIR, HIGH);
   digitalWrite(M3_DIR, LOW);
   digitalWrite(M4_DIR, LOW);
+
+  analogWrite(M1_PWM, speedVal);
+  analogWrite(M2_PWM, speedVal);
+  analogWrite(M3_PWM, speedVal);
+  analogWrite(M4_PWM, speedVal);
+}
+
+void rotate(int speedVal) {
+  digitalWrite(M1_DIR, HIGH);
+  digitalWrite(M2_DIR, HIGH);
+  digitalWrite(M3_DIR, HIGH);
+  digitalWrite(M4_DIR, HIGH);
 
   analogWrite(M1_PWM, speedVal);
   analogWrite(M2_PWM, speedVal);
@@ -164,18 +185,7 @@ void right(int speedVal) {
 }
 
 void rotateRight(int speedVal) {
-  // Left side forward
-  digitalWrite(M1_DIR, LOW);
-  digitalWrite(M3_DIR, HIGH);
-
-  // Right side backward
-  digitalWrite(M2_DIR, HIGH);
-  digitalWrite(M4_DIR, HIGH);
-
-  analogWrite(M1_PWM, speedVal);
-  analogWrite(M2_PWM, speedVal);
-  analogWrite(M3_PWM, speedVal);
-  analogWrite(M4_PWM, speedVal);
+//
 }
 
 // =====================================
