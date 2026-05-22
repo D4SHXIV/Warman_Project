@@ -1,0 +1,124 @@
+// Motor A
+#define ENA_PIN 34
+#define IN1_PIN 30
+#define IN2_PIN 32
+
+// Motor B
+#define ENB_PIN 22
+#define IN3_PIN 24
+#define IN4_PIN 26
+
+struct motor {
+  byte speed = 0;
+
+  struct {
+    byte input1 = LOW;
+    byte input2 = LOW;
+  } direction;
+};
+
+motor motorA, motorB;
+
+void setup()
+{
+
+  pinMode(ENA_PIN, OUTPUT);
+  pinMode(IN1_PIN, OUTPUT);
+  pinMode(IN2_PIN, OUTPUT);
+
+  pinMode(ENB_PIN, OUTPUT);
+  pinMode(IN3_PIN, OUTPUT);
+  pinMode(IN4_PIN, OUTPUT);
+
+  sendToMotorA();
+  sendToMotorB();
+}
+
+void loop()
+{
+
+  delay(2000);
+
+  setMotorDirectionBackward(motorA);
+  setMotorDirectionBackward(motorB);
+
+  increaseMotorsSpeed();
+
+  delay(2000);
+
+  decreaseMotorsSpeed();
+
+  delay(2000);
+
+  setMotorDirectionForward(motorA);
+  setMotorDirectionForward(motorB);
+
+  increaseMotorsSpeed();
+
+  delay(2000);
+
+  decreaseMotorsSpeed();
+}
+
+void sendToMotorA()
+{
+  sendToMotor(motorA, ENA_PIN, IN1_PIN, IN2_PIN);
+}
+
+void sendToMotorB()
+{
+  sendToMotor(motorB, ENB_PIN, IN3_PIN, IN4_PIN);
+}
+
+void increaseMotorsSpeed()
+{
+  for (int speed = 0; speed <= 255; speed++) {
+
+    setMotorSpeed(motorA, speed);
+    setMotorSpeed(motorB, speed);
+
+    sendToMotorA();
+    sendToMotorB();
+
+    delay(20);
+  }
+}
+
+void decreaseMotorsSpeed()
+{
+  for (int speed = 255; speed >= 0; speed--) {
+
+    setMotorSpeed(motorA, speed);
+    setMotorSpeed(motorB, speed);
+
+    sendToMotorA();
+    sendToMotorB();
+
+    delay(20);
+  }
+}
+
+void setMotorDirectionForward(motor &m)
+{
+  m.direction.input1 = HIGH;
+  m.direction.input2 = LOW;
+}
+
+void setMotorDirectionBackward(motor &m)
+{
+  m.direction.input1 = LOW;
+  m.direction.input2 = HIGH;
+}
+
+void setMotorSpeed(motor &m, byte speedValue)
+{
+  m.speed = speedValue;
+}
+
+void sendToMotor(motor &m, int enablePin, int input1Pin, int input2Pin)
+{
+  analogWrite(enablePin, m.speed);
+
+  digitalWrite(input1Pin, m.direction.input1);
+  digitalWrite(input2Pin, m.direction.input2);
+}
